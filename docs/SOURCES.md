@@ -6,11 +6,11 @@
 
 | 快照目录 | 源路径 | git 状态 | 上游 | 快照说明 |
 |---|---|---|---|---|
-| `extensions/instacloud` | `D:\Project\Openchamber\初始配置\instacloud-extension` | 无 git | 无 | 当前目录原样；含 `instacloud-extension-0.1.0.zip` |
-| `extensions/obsidian-panel` | `D:\Project\Openchamber\初始配置\obsidian-panel` | `main@a4c7345`，干净 | [openchamber-obsidian-panel](https://github.com/wbi35772/openchamber-obsidian-panel) | 与上游 HEAD 一致 |
-| `extensions/instabox-matrix` | `D:\Project\Openchamber\初始配置\openchamber-instabox-matrix` | `main@064528c`，5 项未提交 | [openchamber-instabox-matrix](https://github.com/wbi35772/openchamber-instabox-matrix) | 本地未配置 remote；快照包含 `scripts/keepalive-tick.js` 等工作树改动 |
-| `extensions/shardx-workspace` | `D:\Project\Openchamber\初始配置\openchamber-shardx-workspace` | `master@f8db7b0`，18 项未提交 | 无 | 快照包含未提交的 `panel/mirror.ts` 与 6 张 preview PNG；`package.json` 1.2.0 与 `manifest.json` 1.3.0 不一致 |
-| `extensions/openwith-matrix` | `D:\Project\Openchamber\初始配置\openwith-matrix` | `main@7251072`，20 项未提交 | [openchamber-openwith-matrix](https://github.com/wbi35772/openchamber-openwith-matrix) | 快照包含生成的 `dist/` 与未提交的 `service/marketplace.ts`、`service/marketplaceZh.ts` |
+| `extensions/instacloud` | `D:\Project\Openchamber\初始配置\projects\instacloud-extension` | 无 git | 无 | 当前目录原样；含 `instacloud-extension-0.1.0.zip` |
+| `extensions/obsidian-panel` | `D:\Project\Openchamber\初始配置\projects\obsidian-panel` | `main@a4c7345`，干净 | [openchamber-obsidian-panel](https://github.com/wbi35772/openchamber-obsidian-panel) | 与上游 HEAD 一致 |
+| `extensions/instabox-matrix` | `D:\Project\Openchamber\初始配置\projects\openchamber-instabox-matrix` | `main@064528c`，5 项未提交 | [openchamber-instabox-matrix](https://github.com/wbi35772/openchamber-instabox-matrix) | 本地未配置 remote；快照包含 `scripts/keepalive-tick.js` 等工作树改动 |
+| `extensions/shardx-workspace` | `D:\Project\Openchamber\初始配置\projects\openchamber-shardx-workspace` | `master@f8db7b0`，18 项未提交 | 无 | 快照包含未提交的 `panel/mirror.ts` 与 6 张 preview PNG；`package.json` 1.2.0 与 `manifest.json` 1.3.0 不一致 |
+| `extensions/openwith-matrix` | `D:\Project\Openchamber\初始配置\projects\openwith-matrix` | `main@7251072`，20 项未提交 | [openchamber-openwith-matrix](https://github.com/wbi35772/openchamber-openwith-matrix) | 快照包含生成的 `dist/` 与未提交的 `service/marketplace.ts`、`service/marketplaceZh.ts` |
 
 ## 复制规则
 
@@ -55,4 +55,4 @@ powershell -ExecutionPolicy Bypass -File .\scripts\sync-from-local.ps1 -Check
 powershell -ExecutionPolicy Bypass -File .\scripts\sync-from-local.ps1
 ```
 
-脚本从自身位置推导工作区根目录，默认对应 `D:\Project\Openchamber\初始配置`，无需修改路径。
+脚本从自身位置推导工作区根目录，默认对应 `D:\Project\Openchamber\初始配置\projects`，无需修改路径。

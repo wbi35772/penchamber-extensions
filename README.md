@@ -79,7 +79,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\sync-from-local.ps1
 
 - [`wbi35772/proxygate-matrix`](https://github.com/wbi35772/proxygate-matrix)：Go 服务 + React 面板，Instabox 的配套代理网关；`main` 已验证到 `3661517`，干净克隆可 `docker build`。
 - [`wbi35772/o2a`](https://github.com/wbi35772/o2a)：opencode2api 反代服务，`30df6e5`。
-- `warp-handoff/`：WARP 池运维文档，仅存在于本地工作区，不是可安装扩展。
+- `projects/warp-handoff/`：WARP 池运维文档，仅存在于本地工作区，不是可安装扩展。
 
 ## 备注
 
