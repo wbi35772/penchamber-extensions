@@ -1,0 +1,22 @@
+{
+  "id": "instabox-matrix",
+  "package": "openchamber-instabox-matrix",
+  "version": "1.4.0",
+  "snapshot": "2026-11-11",
+  "sourcePath": "D:/Project/Openchamber/初始配置/openchamber-instabox-matrix",
+  "git": {
+    "repo": true,
+    "branch": "main",
+    "head": "064528c",
+    "dirty": true,
+    "remoteConfigured": false
+  },
+  "upstream": "https://github.com/wbi35772/openchamber-instabox-matrix",
+  "sessions": [
+    "ses_e500dd1f9ffefYJXJ1V7zaDL1Y"
+  ],
+  "license": "MIT",
+  "files": 38,
+  "bytes": 734000,
+  "notes": "panel + service + MCP tools；零构建原生 ES Module。快照包含未提交的 scripts/keepalive-tick.js 等工作树修改。"
+}

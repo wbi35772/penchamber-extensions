@@ -1,0 +1,22 @@
+{
+  "id": "shardx-workspace",
+  "package": "openchamber-shardx-workspace",
+  "version": "1.2.0",
+  "snapshot": "2026-11-11",
+  "sourcePath": "D:/Project/Openchamber/初始配置/openchamber-shardx-workspace",
+  "git": {
+    "repo": true,
+    "branch": "master",
+    "head": "f8db7b0",
+    "dirty": true,
+    "remoteConfigured": false
+  },
+  "upstream": null,
+  "sessions": [
+    "ses_e50038348ffezrHC8nD09Vu8az"
+  ],
+  "license": "MIT",
+  "files": 68,
+  "bytes": 3911000,
+  "notes": "panel + service + tools；快照包含未提交的 panel/mirror.ts 与 6 张 preview PNG，以及已跟踪的 preview 截图。"
+}

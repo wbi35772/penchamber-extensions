@@ -1,0 +1,21 @@
+{
+  "id": "obsidian-panel",
+  "package": "obsidian-panel",
+  "version": "0.1.0",
+  "snapshot": "2026-11-11",
+  "sourcePath": "D:/Project/Openchamber/初始配置/obsidian-panel",
+  "git": {
+    "repo": true,
+    "branch": "main",
+    "head": "a4c7345",
+    "dirty": false
+  },
+  "upstream": "https://github.com/wbi35772/openchamber-obsidian-panel",
+  "sessions": [
+    "ses_e60b87318ffeQlTAaGbNKYWmNI"
+  ],
+  "license": null,
+  "files": 29,
+  "bytes": 912000,
+  "notes": "panel + page + statusSection + service；service 允许 Obsidian.exe / powershell.exe / tasklist.exe。快照为干净工作树。"
+}

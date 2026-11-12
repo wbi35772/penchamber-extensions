@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Brain + Obsidian</title>
+    <style>
+      :root { color-scheme: light dark; font-family: var(--oc-font, ui-sans-serif, system-ui, sans-serif); }
+      * { box-sizing: border-box; }
+      html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+      body { background: var(--oc-bg, transparent); color: var(--oc-fg, CanvasText); font-size: 12px; }
+      button, select, input, textarea { font: inherit; color: inherit; }
+      button:disabled { opacity: .5; cursor: default; }
+      #app { display: flex; flex-direction: column; height: 100%; }
+
+      #layout-bar {
+        flex: 0 0 30px; display: flex; align-items: center; gap: 4px;
+        padding: 0 6px; border-bottom: 1px solid var(--oc-border, rgba(127,127,127,.25));
+        font-size: 11px; color: var(--oc-muted, rgba(127,127,127,.9));
+      }
+      #layout-bar .brand { font-weight: 600; color: var(--oc-fg, inherit); white-space: nowrap; }
+      #layout-bar .grow { flex: 1; }
+      #layout-bar .layout-label { font-size: 10px; letter-spacing: .04em; text-transform: uppercase; }
+      .boot-error { max-width: 50%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #f85149; }
+      .boot-error[hidden] { display: none; }
+      .seg {
+        height: 20px; padding: 0 7px; border: 1px solid var(--oc-border, rgba(127,127,127,.35));
+        border-radius: 5px; background: transparent; cursor: pointer; font-size: 11px;
+        color: var(--oc-muted, rgba(127,127,127,.9)); white-space: nowrap;
+      }
+      .seg:hover { background: var(--oc-hover, rgba(127,127,127,.12)); color: var(--oc-fg, inherit); }
+      .seg[aria-pressed="true"] {
+        background: var(--oc-selection, rgba(127,127,127,.2));
+        border-color: var(--oc-border, rgba(127,127,127,.55));
+        color: var(--oc-fg, inherit); font-weight: 600;
+      }
+
+      #split { flex: 1; min-height: 0; min-width: 0; display: flex; }
+      #brain-pane {
+        flex: 0 0 40%; display: flex; flex-direction: column;
+        min-width: 0; min-height: 0; overflow: hidden;
+      }
+      #obsidian-pane {
+        flex: 1 1 0; display: flex; flex-direction: column;
+        min-width: 0; min-height: 0; overflow: hidden;
+      }
+      #divider { flex: 0 0 6px; position: relative; touch-action: none; background: transparent; outline: none; }
+      #divider::before { content: ""; position: absolute; background: var(--oc-border, rgba(127,127,127,.25)); transition: background .12s; }
+      #split[data-direction="column"] > #divider { cursor: row-resize; }
+      #split[data-direction="column"] > #divider::before { left: 0; right: 0; top: 50%; height: 1px; }
+      #split[data-direction="row"] > #divider { cursor: col-resize; }
+      #split[data-direction="row"] > #divider::before { top: 0; bottom: 0; left: 50%; width: 1px; }
+      #divider:hover::before, #divider:focus-visible::before { background: var(--oc-accent, #6aa9ff); }
+
+      /* Brain pane */
+      #brain-app { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+      #brain-app .head { display: flex; align-items: center; gap: 6px; padding: 6px 8px 4px; flex: 0 0 auto; }
+      #brain-app .head strong { font-size: 12px; font-weight: 600; white-space: nowrap; }
+      #brain-app .head .spacer { flex: 1; }
+      #brain-app .icon {
+        display: inline-flex; width: 22px; height: 22px; flex: 0 0 22px;
+        align-items: center; justify-content: center; padding: 0;
+        border: 0; border-radius: 6px; background: transparent;
+        color: var(--oc-muted, rgba(127,127,127,.9)); cursor: pointer;
+      }
+      #brain-app .icon:hover:not(:disabled) { background: var(--oc-hover, rgba(127,127,127,.12)); color: var(--oc-fg, inherit); }
+      #brain-app .icon svg { width: 13px; height: 13px; pointer-events: none; }
+      #brain-app .bar { padding: 0 8px 6px; flex: 0 0 auto; }
+      #brain-app select {
+        width: 100%; height: 24px; padding: 0 8px;
+        border: 1px solid var(--oc-border, rgba(127,127,127,.35)); border-radius: 7px;
+        background-color: var(--oc-bg, Canvas); color: var(--oc-fg, CanvasText);
+        color-scheme: light dark;
+      }
+      #brain-app select option, #brain-app select optgroup { background-color: var(--oc-bg, Canvas); color: var(--oc-fg, CanvasText); }
+      #brain-app #error {
+        margin: 0 8px 4px; padding: 4px 7px; border-radius: 6px; font-size: 11px;
+        background: color-mix(in srgb, #f85149 16%, transparent); color: #f85149;
+        flex: 0 0 auto;
+      }
+      #brain-app #error[hidden] { display: none; }
+      #brain-app #list { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 2px 6px 6px; display: flex; flex-direction: column; gap: 3px; }
+      #brain-app .row {
+        display: flex; align-items: center; gap: 7px; width: 100%;
+        padding: 5px 7px; border: 1px solid transparent; border-radius: 7px;
+        background: transparent; text-align: left; cursor: pointer;
+      }
+      #brain-app .row:hover { background: var(--oc-hover, rgba(127,127,127,.12)); }
+      #brain-app .row[aria-selected="true"] { background: var(--oc-selection, rgba(127,127,127,.18)); border-color: var(--oc-border, rgba(127,127,127,.35)); }
+      #brain-app .dot { width: 7px; height: 7px; flex: 0 0 7px; border-radius: 50%; background: var(--oc-muted, currentColor); }
+      #brain-app .dot[data-status="running"] { background: #3b82f6; }
+      #brain-app .dot[data-status="blocked"] { background: #d29922; }
+      #brain-app .dot[data-status="done"] { background: #3fb950; }
+      #brain-app .title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      #brain-app .prio { flex: 0 0 auto; font-size: 10px; color: var(--oc-muted, rgba(127,127,127,.9)); }
+      #brain-app .empty { margin: 6px 8px; color: var(--oc-muted, rgba(127,127,127,.9)); font-size: 11px; line-height: 1.5; }
+      #brain-app .empty button { margin-top: 6px; }
+      #brain-app #actions {
+        flex: 0 0 auto; border-top: 1px solid var(--oc-border, rgba(127,127,127,.25));
+        padding: 6px 8px 8px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+      }
+      #brain-app #actions[hidden] { display: none; }
+      #brain-app #actions .label { flex: 1 1 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--oc-muted, rgba(127,127,127,.9)); }
+      #brain-app .btn {
+        height: 24px; padding: 0 9px; border: 1px solid var(--oc-border, rgba(127,127,127,.35));
+        border-radius: 7px; background: transparent; cursor: pointer; white-space: nowrap;
+      }
+      #brain-app .btn:hover:not(:disabled) { background: var(--oc-hover, rgba(127,127,127,.12)); }
+      #brain-app .btn.primary { background: var(--oc-selection, rgba(127,127,127,.2)); border-color: var(--oc-border, rgba(127,127,127,.5)); font-weight: 600; }
+      #brain-app .copy-wrap { position: relative; display: inline-flex; }
+      #brain-app .copy-menu {
+        position: absolute; z-index: 30; left: 0; bottom: calc(100% + 4px);
+        min-width: 168px; padding: 4px; display: flex; flex-direction: column; gap: 1px;
+        border: 1px solid var(--oc-border, rgba(127,127,127,.35)); border-radius: 8px;
+        background: var(--oc-bg, Canvas); color: var(--oc-fg, CanvasText);
+        box-shadow: 0 8px 24px rgba(0,0,0,.28);
+      }
+      #brain-app .copy-menu[hidden] { display: none; }
+      #brain-app .copy-item {
+        display: block; width: 100%; padding: 5px 8px; border: 0; border-radius: 6px;
+        background: transparent; color: inherit; text-align: left; cursor: pointer;
+        font: inherit; font-size: 11px; white-space: nowrap;
+      }
+      #brain-app .copy-item:hover:not(:disabled) { background: var(--oc-hover, rgba(127,127,127,.12)); }
+      #brain-app .copy-item:disabled { cursor: default; opacity: .6; }
+      #brain-app #foot { flex: 0 0 auto; padding: 0 8px 6px; font-size: 10px; color: var(--oc-muted, rgba(127,127,127,.9)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      #brain-app .spin { animation: spin 1s linear infinite; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* Obsidian pane */
+      #obs-toolbar { flex: 0 0 auto; display: flex; flex-direction: column; gap: 4px; padding: 5px 8px 6px; border-bottom: 1px solid var(--oc-border, rgba(127,127,127,.25)); }
+      #obs-toolbar .row1, #obs-toolbar .row2 { display: flex; align-items: center; gap: 6px; min-width: 0; }
+      #obs-toolbar .brand { font-weight: 600; white-space: nowrap; }
+      #obs-toolbar .grow { flex: 1; }
+      #status { display: inline-flex; align-items: center; gap: 5px; min-width: 0; font-size: 11px; color: var(--oc-muted, rgba(127,127,127,.9)); }
+      #status::before { content: ""; width: 6px; height: 6px; flex: 0 0 6px; border-radius: 50%; background: currentColor; }
+      #status[data-state="connected"]::before { background: #3fb950; }
+      #status[data-state="warning"]::before { background: #d29922; }
+      #status[data-state="error"]::before { background: #f85149; }
+      #status-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .btn {
+        height: 24px; padding: 0 9px; border: 1px solid var(--oc-border, rgba(127,127,127,.35));
+        border-radius: 7px; background: transparent; cursor: pointer; white-space: nowrap;
+      }
+      .btn:hover:not(:disabled) { background: var(--oc-hover, rgba(127,127,127,.12)); }
+      .btn.primary { background: var(--oc-selection, rgba(127,127,127,.2)); border-color: var(--oc-border, rgba(127,127,127,.5)); font-weight: 600; }
+      .btn.tiny { height: 22px; padding: 0 7px; font-size: 11px; }
+      #vaults { display: flex; gap: 4px; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+      #vaults::-webkit-scrollbar { display: none; }
+      #vaults[hidden] { display: none; }
+      #vaults .vault {
+        max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        height: 22px; padding: 0 8px; border: 1px solid var(--oc-border, rgba(127,127,127,.35));
+        border-radius: 999px; background: transparent; cursor: pointer; font-size: 11px;
+      }
+      #vaults .vault:hover:not(:disabled) { background: var(--oc-hover, rgba(127,127,127,.12)); }
+      #vaults .vault[aria-selected="true"] { background: var(--oc-selection, rgba(127,127,127,.22)); border-color: var(--oc-border, rgba(127,127,127,.55)); font-weight: 600; }
+      #obs-actions { display: flex; gap: 4px; margin-left: auto; flex: 0 0 auto; }
+      #obs-actions[hidden] { display: none; }
+      #openform { display: flex; gap: 4px; }
+      #openform[hidden] { display: none; }
+      #path {
+        flex: 1; min-width: 0; height: 22px; padding: 0 8px;
+        border: 1px solid var(--oc-border, rgba(127,127,127,.35)); border-radius: 6px;
+        background: var(--oc-bg, Canvas); color: var(--oc-fg, CanvasText);
+      }
+
+      #screen-wrap {
+        flex: 1 1 auto; min-height: 0; position: relative; overflow: hidden;
+        background: #0b0b0e; touch-action: none; outline: none;
+      }
+      #screen { display: block; width: 100%; height: 100%; object-fit: contain; user-select: none; -webkit-user-drag: none; }
+      #key-sink {
+        position: absolute; left: 0; top: 0; width: 2px; height: 2px; padding: 0; margin: 0;
+        border: 0; opacity: 0; pointer-events: none; resize: none; overflow: hidden;
+        background: transparent; color: transparent; caret-color: transparent;
+      }
+      #screen-overlay {
+        position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+        padding: 16px; background: color-mix(in srgb, #000 32%, transparent);
+      }
+      #screen-overlay[hidden] { display: none; }
+      #screen-overlay .overlay-box { max-width: 340px; text-align: center; }
+      #screen-overlay p { margin: 0 0 10px; color: #e6e6e6; font-size: 12px; line-height: 1.5; word-break: break-word; }
+      #screen-overlay .overlay-actions { display: flex; gap: 6px; justify-content: center; }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div id="layout-bar">
+        <span class="brand">Workspace</span>
+        <span id="boot-error" class="boot-error" hidden></span>
+        <span class="grow"></span>
+        <span class="layout-label">Layout</span>
+        <button id="layout-column" class="seg" type="button" title="Brain above Obsidian" aria-pressed="true">⇅ Stacked</button>
+        <button id="layout-row" class="seg" type="button" title="Brain beside Obsidian" aria-pressed="false">⇄ Side by side</button>
+      </div>
+      <div id="split" data-direction="column">
+        <section id="brain-pane" aria-label="Brain">
+          <div id="brain-app">
+            <div class="head">
+              <strong>Brain 任务</strong>
+              <span class="spacer"></span>
+              <button id="refresh" class="icon" type="button" title="刷新任务" aria-label="刷新任务">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M20 11a8 8 0 1 0-2.34 5.66"/><path d="M20 4v7h-7"/>
+                </svg>
+              </button>
+            </div>
+            <div class="bar">
+              <select id="project" aria-label="选择项目"></select>
+            </div>
+            <div id="error" hidden></div>
+            <div id="list"></div>
+            <div id="actions" hidden></div>
+            <div id="foot"></div>
+          </div>
+        </section>
+        <div id="divider" role="separator" aria-orientation="horizontal" tabindex="0" aria-label="Resize Brain and Obsidian"></div>
+        <section id="obsidian-pane" aria-label="Obsidian">
+          <div id="obs-toolbar">
+            <div class="row1">
+              <span class="brand">Obsidian</span>
+              <span id="status" data-state="idle"><span id="status-text">Connecting…</span></span>
+              <span class="grow"></span>
+              <button id="primary" class="btn primary" type="button">Open</button>
+            </div>
+            <div class="row2">
+              <div id="vaults" role="tablist" aria-label="Vaults" hidden></div>
+              <div id="obs-actions">
+                <button id="add" class="btn tiny" type="button" title="Add a vault folder">Add</button>
+                <button id="show" class="btn tiny" type="button" title="Bring the Obsidian window forward">Focus</button>
+                <button id="restart" class="btn tiny" type="button" title="Restart Obsidian with the debug port">Restart</button>
+              </div>
+            </div>
+            <div id="openform" hidden>
+              <input id="path" type="text" placeholder="C:\path\to\vault" spellcheck="false">
+              <button id="open-go" class="btn tiny" type="button">Open</button>
+              <button id="open-cancel" class="btn tiny" type="button">Cancel</button>
+            </div>
+          </div>
+          <div id="screen-wrap" tabindex="0">
+            <img id="screen" alt="Obsidian screen" draggable="false">
+            <textarea id="key-sink" aria-hidden="true" tabindex="-1" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+            <div id="screen-overlay" hidden>
+              <div class="overlay-box">
+                <p id="screen-message">Obsidian is not connected.</p>
+                <div class="overlay-actions">
+                  <button id="screen-retry" class="btn tiny" type="button">Retry</button>
+                  <button id="screen-launch" class="btn tiny primary" type="button">Launch Obsidian</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <script src="./main.js"></script>
+  </body>
+</html>

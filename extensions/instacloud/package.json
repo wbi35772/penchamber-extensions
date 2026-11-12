@@ -1,0 +1,52 @@
+{
+  "name": "openchamber-instacloud",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "InstaCloud for OpenChamber: projects, compute services, deploys, logs, metrics and a container terminal",
+  "license": "MIT",
+  "scripts": {
+    "build": "bunx openchamber-guest-bundle panel/main.ts panel/main.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@openchamber/sdk": "2.6.0",
+    "typescript": "^5.6.3"
+  },
+  "openchamber": {
+    "apiVersion": 1,
+    "engines": {
+      "openchamber": ">=2.5.0"
+    },
+    "contributes": {
+      "panel": {
+        "id": "instacloud",
+        "name": "InstaCloud",
+        "icon": "icon.svg",
+        "entry": "panel/index.html"
+      },
+      "integration": {
+        "name": "InstaCloud",
+        "description": "管理 InstaCloud 项目、Compute 服务、部署、日志与终端",
+        "token": {
+          "apiOrigin": "https://api.instacloud.com",
+          "account": {
+            "path": "/me",
+            "name": "user.email"
+          },
+          "scheme": "bearer"
+        },
+        "settings": [
+          {
+            "id": "default-region",
+            "label": "默认区域（us-east / eu-central / ap-southeast）"
+          },
+          {
+            "id": "default-org",
+            "label": "默认组织 ID（可留空）"
+          }
+        ]
+      }
+    }
+  }
+}

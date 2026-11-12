@@ -1,0 +1,22 @@
+{
+  "id": "instacloud",
+  "package": "openchamber-instacloud",
+  "version": "0.1.0",
+  "snapshot": "2026-11-11",
+  "sourcePath": "D:/Project/Openchamber/初始配置/instacloud-extension",
+  "git": {
+    "repo": false,
+    "branch": null,
+    "head": null,
+    "dirty": null
+  },
+  "upstream": null,
+  "sessions": [
+    "ses_e60cdd31fffedCjLrh5Vqd4Nv0",
+    "ses_e5e03e058ffeg8mekLNBKz8SwH"
+  ],
+  "license": "MIT",
+  "files": 22,
+  "bytes": 349000,
+  "notes": "仅 panel + integration 两个入口；服务层未落地。包含源码与打包 zip，不含 node_modules。"
+}

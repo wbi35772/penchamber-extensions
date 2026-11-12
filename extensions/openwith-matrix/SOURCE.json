@@ -1,0 +1,23 @@
+{
+  "id": "openwith-matrix",
+  "package": "openchamber-openwith-matrix",
+  "version": "2.0.0",
+  "snapshot": "2026-11-11",
+  "sourcePath": "D:/Project/Openchamber/初始配置/openwith-matrix",
+  "git": {
+    "repo": true,
+    "branch": "main",
+    "head": "7251072",
+    "dirty": true
+  },
+  "upstream": "https://github.com/wbi35772/openchamber-openwith-matrix",
+  "sessions": [
+    "ses_e59406320ffegUStFsWP4Xt91B",
+    "ses_e372b11eeffebwSwJXOYy3f3Jf",
+    "ses_e372b11edffek8Zc27RioSLWvs"
+  ],
+  "license": "Apache-2.0",
+  "files": 61,
+  "bytes": 975000,
+  "notes": "panel + page + service；service 带 exec 允许列表。包含生成的 dist/ 与未提交的 service/marketplace.ts、service/marketplaceZh.ts。"
+}

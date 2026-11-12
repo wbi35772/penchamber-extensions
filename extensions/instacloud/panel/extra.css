@@ -1,0 +1,74 @@
+.ic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.ic svg {
+  display: block;
+}
+
+.view {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  min-width: 0;
+}
+
+.check-row {
+  display: flex;
+  align-items: center;
+  min-height: 30px;
+}
+
+.branch-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.log-prefix {
+  color: var(--subtle);
+}
+
+.term-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 0 11px 10px;
+}
+
+.term-chip {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--surface-muted);
+  color: var(--muted);
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 3px 8px;
+}
+
+.term-chip:hover {
+  color: var(--fg);
+  border-color: color-mix(in srgb, var(--muted) 40%, var(--border));
+}
+
+.build-list .table-wrap {
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.card-body > .card-note + .modal-actions {
+  margin-top: 2px;
+}
+
+.card-body > .modal-actions {
+  justify-content: flex-start;
+}
+
+.project-item .dot {
+  flex: 0 0 auto;
+}

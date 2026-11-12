@@ -1,0 +1,74 @@
+{
+  "name": "openchamber-shardx-workspace",
+  "version": "1.2.0",
+  "private": true,
+  "type": "module",
+  "description": "ShardX Fingerprint Browser Workspace - multi-session parallel isolation with browser-tab UI",
+  "license": "MIT",
+  "scripts": {
+    "build": "bun run build:panel && bun run build:service",
+    "build:panel": "bunx openchamber-guest-bundle panel/main.ts panel/main.js",
+    "build:service": "bunx openchamber-guest-bundle --node service/main.ts service/main.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@openchamber/sdk": "2.6.0",
+    "typescript": "^5.6.3"
+  },
+  "openchamber": {
+    "apiVersion": 1,
+    "engines": {
+      "openchamber": ">=2.5.0"
+    },
+    "contributes": {
+      "panel": {
+        "id": "shardx-workspace",
+        "name": "ShardX Workspace",
+        "icon": "icon.svg",
+        "entry": "panel/index.html"
+      },
+      "service": {
+        "entry": "service/main.js",
+        "runtime": "host"
+      },
+      "tools": [
+        {
+          "name": "列表 / 绑定指纹环境",
+          "description": "列出本机 ShardX 指纹环境，或绑定一个实例到当前会话",
+          "match": "mcp.shardx*",
+          "icon": "window-line"
+        },
+        {
+          "name": "打开网页",
+          "description": "在已绑定的实例里导航到 URL",
+          "match": "mcp.shardx*",
+          "icon": "global-line"
+        },
+        {
+          "name": "页面交互",
+          "description": "点击、输入、滚动或执行 JS",
+          "match": "mcp.shardx*",
+          "icon": "cursor-line"
+        },
+        {
+          "name": "提取页面内容",
+          "description": "提取 Markdown / HTML / 表单 / 纯文本",
+          "match": "mcp.shardx*",
+          "icon": "file-text-line"
+        },
+        {
+          "name": "Cookie 管理",
+          "description": "读取、注入或清空实例 Cookie",
+          "match": "mcp.shardx*",
+          "icon": "database-2-line"
+        },
+        {
+          "name": "关闭并释放实例",
+          "description": "关闭浏览器并解除会话独占",
+          "match": "mcp.shardx*",
+          "icon": "shut-down-line"
+        }
+      ]
+    }
+  }
+}
